@@ -68,6 +68,7 @@
                     <option value="good"    {{ old('condition') === 'good'    ? 'selected' : '' }}>Baik</option>
                     <option value="damaged" {{ old('condition') === 'damaged' ? 'selected' : '' }}>Rusak</option>
                     <option value="lost"    {{ old('condition') === 'lost'    ? 'selected' : '' }}>Hilang</option>
+                    <option value="maintenance" {{ old('condition') === 'maintenance' ? 'selected' : '' }}>Perawatan</option>
                 </select>
                 @error('condition')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>

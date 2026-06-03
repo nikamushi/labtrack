@@ -67,6 +67,7 @@
                     <option value="good"    {{ old('condition', $item->condition) === 'good'    ? 'selected' : '' }}>Baik</option>
                     <option value="damaged" {{ old('condition', $item->condition) === 'damaged' ? 'selected' : '' }}>Rusak</option>
                     <option value="lost"    {{ old('condition', $item->condition) === 'lost'    ? 'selected' : '' }}>Hilang</option>
+                    <option value="maintenance" {{ old('condition', $item->condition) === 'maintenance' ? 'selected' : '' }}>Perawatan</option>
                 </select>
             </div>
 

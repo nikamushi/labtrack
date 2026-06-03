@@ -63,7 +63,7 @@
                             <p class="text-[10px] text-slate-400 uppercase tracking-wide">Stok</p>
                         </div>
                         <div class="text-center">
-                            @php $condLabel = ['good'=>'Baik','damaged'=>'Rusak','lost'=>'Hilang']; @endphp
+                            @php $condLabel = ['good'=>'Baik','damaged'=>'Rusak','lost'=>'Hilang','maintenance'=>'Perawatan']; @endphp
                             <p class="text-sm font-semibold text-slate-700">{{ $condLabel[$item->condition] ?? $item->condition }}</p>
                             <p class="text-[10px] text-slate-400 uppercase tracking-wide">Kondisi</p>
                         </div>

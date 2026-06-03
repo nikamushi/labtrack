@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->integer('stock')->default(0);
-            $table->enum('condition', ['good', 'damaged', 'maintenance'])->default('good');
-            $table->enum('status', ['available', 'borrowed', 'maintenance'])->default('available');
+            $table->enum('condition', ['good', 'damaged', 'lost', 'maintenance'])->default('good');
+            $table->enum('status', ['available', 'borrowed', 'maintenance', 'unavailable'])->default('available');
             $table->timestamps();
         });
     }

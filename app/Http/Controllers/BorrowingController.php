@@ -39,8 +39,17 @@ class BorrowingController extends Controller
 
         // Deduct stock
         $item->decrement('stock', $borrowing->quantity);
-        if ($item->fresh()->stock === 0) {
+        $item->refresh();
+
+        // Sync item status: borrowed if no stock left, else stays available
+        if ($item->condition === 'maintenance') {
+            $item->update(['status' => 'maintenance']);
+        } elseif ($item->condition === 'lost') {
             $item->update(['status' => 'unavailable']);
+        } elseif ($item->stock === 0) {
+            $item->update(['status' => 'borrowed']);
+        } else {
+            $item->update(['status' => 'available']);
         }
 
         $borrowing->update(['status' => 'approved']);

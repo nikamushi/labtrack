@@ -32,12 +32,25 @@ class ReturnController extends Controller
 
         $item = $borrowing->item;
 
-        // Add back stock
+        // Restore stock
         $item->increment('stock', $borrowing->quantity);
-        if ($item->fresh()->stock > 0) {
-            $item->update(['status' => 'available']);
+        $item->refresh();
+
+        // Sync item status based on condition and remaining active borrowings
+        if ($item->condition === 'maintenance') {
+            $newStatus = 'maintenance';
+        } elseif ($item->condition === 'lost') {
+            $newStatus = 'unavailable';
+        } else {
+            $stillBorrowed = $item->borrowings()
+                ->where('status', 'approved')
+                ->where('id', '!=', $borrowing->id)
+                ->sum('quantity');
+            $netStock = $item->stock - $stillBorrowed;
+            $newStatus = $netStock > 0 ? 'available' : 'borrowed';
         }
 
+        $item->update(['status' => $newStatus]);
         $borrowing->update(['status' => 'returned']);
 
         return back()->with('success', 'Pengembalian berhasil dikonfirmasi dan stok barang telah diperbarui.');
