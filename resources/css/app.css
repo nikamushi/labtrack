@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Alpine.js: hide elements until component initializes */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Smooth page transitions */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

@@ -9,6 +9,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\AdminStudentController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
         Route::resource('categories', CategoryController::class);
         Route::resource('items', ItemController::class);
+        Route::resource('students', AdminStudentController::class);
         
         Route::get('/borrowings', [BorrowingController::class, 'adminIndex'])->name('borrowings.index');
         Route::patch('/borrowings/{borrowing}/approve', [BorrowingController::class, 'approve'])->name('borrowings.approve');
