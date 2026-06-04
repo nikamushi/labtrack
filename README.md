@@ -1,4 +1,4 @@
-# LabTrack 🔬
+# LabTrack 
 
 **Sistem Manajemen Peminjaman Inventaris Laboratorium Berbasis Web**
 
@@ -70,7 +70,7 @@ Pastikan perangkat Anda sudah terinstall:
 
 **1. Clone repositori & masuk ke direktori proyek**
 ```bash
-git clone <https://github.com/nikamushi/labtrack.git>
+git clone https://github.com/nikamushi/labtrack.git
 cd labtrack
 ```
 
