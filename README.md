@@ -1,4 +1,4 @@
-# LabTrack 🔬
+# LabTrack 
 
 **Sistem Manajemen Peminjaman Inventaris Laboratorium Berbasis Web**
 
