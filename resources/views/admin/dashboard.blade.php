@@ -66,7 +66,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
         {{-- Top Borrowed Items --}}
         <div class="bg-white rounded-xl border border-slate-200 p-5">
-            <h3 class="text-sm font-semibold text-slate-700 mb-4">🏆 Top Barang Paling Sering Dipinjam</h3>
+            <h3 class="text-sm font-semibold text-slate-700 mb-4">Top Barang Paling Sering Dipinjam</h3>
             @if($topItems->isEmpty())
                 <p class="text-sm text-slate-400 text-center py-6">Belum ada data peminjaman.</p>
             @else
