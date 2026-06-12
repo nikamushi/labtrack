@@ -10,6 +10,7 @@ use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AdminStudentController;
+use App\Http\Controllers\FineController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
         Route::resource('categories', CategoryController::class);
+        Route::get('/items/export', [ItemController::class, 'export'])->name('items.export');
         Route::resource('items', ItemController::class);
         Route::resource('students', AdminStudentController::class);
         
@@ -39,7 +41,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/returns', [ReturnController::class, 'adminIndex'])->name('returns.index');
         Route::patch('/returns/{borrowing}/approve', [ReturnController::class, 'approve'])->name('returns.approve');
         
+        Route::get('/history/export', [HistoryController::class, 'export'])->name('history.export');
         Route::get('/history', [HistoryController::class, 'adminIndex'])->name('history.index');
+
+        Route::get('/fines/export', [FineController::class, 'export'])->name('fines.export');
+        Route::get('/fines', [FineController::class, 'index'])->name('fines.index');
     });
 
     // Student Routes Group

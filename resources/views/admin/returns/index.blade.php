@@ -40,11 +40,17 @@
                             {{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('d M Y') }}
                         </td>
                         <td class="px-5 py-3.5 text-center text-sm">
-                            @php $dueDate = \Carbon\Carbon::parse($borrowing->return_date); @endphp
-                            <span class="{{ $dueDate->isPast() ? 'text-red-600 font-semibold' : 'text-slate-600' }}">
+                            @php 
+                                $dueDate = \Carbon\Carbon::parse($borrowing->return_date); 
+                                $isOverdue = $dueDate->isPast();
+                                $daysOverdue = $isOverdue ? $dueDate->diffInDays(\Carbon\Carbon::today(), false) : 0;
+                                $estimatedFine = $daysOverdue * \App\Models\Borrowing::FINE_PER_DAY;
+                            @endphp
+                            <span class="{{ $isOverdue ? 'text-red-600 font-semibold' : 'text-slate-600' }}">
                                 {{ $dueDate->format('d M Y') }}
-                                @if($dueDate->isPast())
-                                    <span class="block text-xs text-red-500">(Terlambat)</span>
+                                @if($isOverdue)
+                                    <span class="block text-xs text-red-500">(Terlambat {{ $daysOverdue }} hari)</span>
+                                    <span class="block text-xs font-semibold text-rose-600">Est. Denda: Rp {{ number_format($estimatedFine, 0, ',', '.') }}</span>
                                 @endif
                             </span>
                         </td>

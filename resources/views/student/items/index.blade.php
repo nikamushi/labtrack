@@ -44,97 +44,105 @@
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             @foreach($items as $item)
-                <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md hover:border-blue-300 transition-all flex flex-col">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                            </svg>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 rounded-full font-medium bg-emerald-100 text-emerald-700">Tersedia</span>
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md hover:border-blue-300 transition-all flex flex-col">
+                    {{-- Item Image Container --}}
+                    <div class="relative h-40 w-full bg-slate-100 border-b border-slate-200 shrink-0">
+                        @if($item->image)
+                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}"
+                                 class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center text-slate-400">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                        @endif
+                        <span class="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-full font-semibold bg-emerald-500 text-white shadow-sm">Tersedia</span>
                     </div>
 
-                    <h3 class="text-sm font-bold text-slate-800 mb-1">{{ $item->name }}</h3>
-                    <p class="text-xs text-slate-400 mb-3">{{ $item->category->name ?? '-' }}</p>
+                    <div class="p-5 flex flex-col flex-1">
+                        <h3 class="text-sm font-bold text-slate-800 mb-1">{{ $item->name }}</h3>
+                        <p class="text-xs text-slate-400 mb-3">{{ $item->category->name ?? '-' }}</p>
 
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="text-center">
-                            <p class="text-lg font-bold text-blue-600 font-mono-numbers">{{ $item->stock }}</p>
-                            <p class="text-[10px] text-slate-400 uppercase tracking-wide">Stok</p>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="text-center">
+                                <p class="text-lg font-bold text-blue-600 font-mono-numbers">{{ $item->stock }}</p>
+                                <p class="text-[10px] text-slate-400 uppercase tracking-wide">Stok</p>
+                            </div>
+                            <div class="text-center">
+                                @php $condLabel = ['good'=>'Baik','damaged'=>'Rusak','lost'=>'Hilang','maintenance'=>'Perawatan']; @endphp
+                                <p class="text-sm font-semibold text-slate-700">{{ $condLabel[$item->condition] ?? $item->condition }}</p>
+                                <p class="text-[10px] text-slate-400 uppercase tracking-wide">Kondisi</p>
+                            </div>
                         </div>
-                        <div class="text-center">
-                            @php $condLabel = ['good'=>'Baik','damaged'=>'Rusak','lost'=>'Hilang','maintenance'=>'Perawatan']; @endphp
-                            <p class="text-sm font-semibold text-slate-700">{{ $condLabel[$item->condition] ?? $item->condition }}</p>
-                            <p class="text-[10px] text-slate-400 uppercase tracking-wide">Kondisi</p>
-                        </div>
-                    </div>
 
-                    {{-- Borrow Button triggers modal --}}
-                    <div class="mt-auto" x-data="{ open: false }">
-                        <button @click="open = true"
-                                class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
-                            Ajukan Pinjam
-                        </button>
+                        {{-- Borrow Button triggers modal --}}
+                        <div class="mt-auto" x-data="{ open: false }">
+                            <button @click="open = true"
+                                    class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                                Ajukan Pinjam
+                            </button>
 
-                        {{-- Borrow Modal --}}
-                        <div x-show="open" x-cloak
-                             class="fixed inset-0 z-50 flex items-center justify-center p-4"
-                             style="background: rgba(0,0,0,0.5);">
-                            <div @click.outside="open = false"
-                                 class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
-                                <div class="flex items-center justify-between mb-5">
-                                    <h3 class="text-base font-bold text-slate-800">Ajukan Peminjaman</h3>
-                                    <button @click="open = false" class="text-slate-400 hover:text-slate-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <div class="bg-slate-50 rounded-lg p-3 mb-5">
-                                    <p class="text-sm font-semibold text-slate-800">{{ $item->name }}</p>
-                                    <p class="text-xs text-slate-500 mt-0.5">{{ $item->category->name ?? '' }} &bull; Stok tersedia: <span class="font-semibold text-blue-600">{{ $item->stock }}</span></p>
-                                </div>
-
-                                <form action="{{ route('student.borrowings.store') }}" method="POST" class="space-y-4">
-                                    @csrf
-                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                            Jumlah <span class="text-red-500">*</span>
-                                        </label>
-                                        <input type="number" name="quantity" value="1" min="1" max="{{ $item->stock }}"
-                                               class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                            Tanggal Pinjam <span class="text-red-500">*</span>
-                                        </label>
-                                        <input type="date" name="borrow_date" value="{{ now()->format('Y-m-d') }}" min="{{ now()->format('Y-m-d') }}"
-                                               class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                            Tanggal Rencana Kembali <span class="text-red-500">*</span>
-                                        </label>
-                                        <input type="date" name="return_date" value="{{ now()->addDays(7)->format('Y-m-d') }}" min="{{ now()->addDay()->format('Y-m-d') }}"
-                                               class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
-
-                                    <div class="flex gap-3 pt-1">
-                                        <button type="submit"
-                                                class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
-                                            Kirim Permintaan
-                                        </button>
-                                        <button type="button" @click="open = false"
-                                                class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors">
-                                            Batal
+                            {{-- Borrow Modal --}}
+                            <div x-show="open" x-cloak
+                                 class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                                 style="background: rgba(0,0,0,0.5);">
+                                <div @click.outside="open = false"
+                                     class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 text-left">
+                                    <div class="flex items-center justify-between mb-5">
+                                        <h3 class="text-base font-bold text-slate-800">Ajukan Peminjaman</h3>
+                                        <button @click="open = false" class="text-slate-400 hover:text-slate-600">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
                                         </button>
                                     </div>
-                                </form>
+
+                                    <div class="bg-slate-50 rounded-lg p-3 mb-5">
+                                        <p class="text-sm font-semibold text-slate-800">{{ $item->name }}</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">{{ $item->category->name ?? '' }} &bull; Stok tersedia: <span class="font-semibold text-blue-600">{{ $item->stock }}</span></p>
+                                    </div>
+
+                                    <form action="{{ route('student.borrowings.store') }}" method="POST" class="space-y-4">
+                                        @csrf
+                                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                                Jumlah <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="number" name="quantity" value="1" min="1" max="{{ $item->stock }}"
+                                                   class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                                Tanggal Pinjam <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="date" name="borrow_date" value="{{ now()->format('Y-m-d') }}" min="{{ now()->format('Y-m-d') }}"
+                                                   class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                                Tanggal Rencana Kembali <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="date" name="return_date" value="{{ now()->addDays(7)->format('Y-m-d') }}" min="{{ now()->addDay()->format('Y-m-d') }}"
+                                                   class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+
+                                        <div class="flex gap-3 pt-1">
+                                            <button type="submit"
+                                                    class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                                                Kirim Permintaan
+                                            </button>
+                                            <button type="button" @click="open = false"
+                                                    class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors">
+                                                Batal
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

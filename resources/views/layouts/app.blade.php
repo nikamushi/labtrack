@@ -14,6 +14,7 @@
 
         <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <style>
             body {
@@ -28,7 +29,7 @@
     <body class="bg-[#f8f9ff] text-[#0b1c30] antialiased">
         <div class="flex min-h-screen">
             <!-- Sidebar Layout (Fixed 260px width) -->
-            <aside class="w-[260px] bg-[#1e293b] text-white flex flex-col shrink-0 border-r border-[#334155]">
+            <aside class="w-[260px] h-screen sticky top-0 bg-[#1e293b] text-white flex flex-col shrink-0 border-r border-[#334155]">
                 <!-- Sidebar Header -->
                 <div class="h-16 flex items-center px-6 border-b border-[#334155]">
                     <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
@@ -91,6 +92,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             Riwayat
+                        </a>
+                        <a href="{{ route('admin.fines.index') }}" 
+                           class="flex items-center px-4 py-2.5 text-sm rounded-md transition-colors {{ request()->routeIs('admin.fines.*') ? 'bg-[#2563eb] text-white font-medium' : 'text-slate-300 hover:bg-[#334155] hover:text-white' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Laporan Denda
                         </a>
                     @else
                         <!-- Student Navigation links -->

@@ -11,13 +11,22 @@
             <h1 class="text-xl font-bold text-slate-800">Inventaris Barang</h1>
             <p class="text-sm text-slate-500 mt-0.5">Kelola seluruh barang di laboratorium</p>
         </div>
-        <a href="{{ route('admin.items.create') }}"
-           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tambah Barang
-        </a>
+        <div class="flex gap-2.5">
+            <a href="{{ route('admin.items.export', request()->query()) }}"
+               class="inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Export CSV
+            </a>
+            <a href="{{ route('admin.items.create') }}"
+               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tambah Barang
+            </a>
+        </div>
     </div>
 
     {{-- Summary Stats --}}
@@ -129,8 +138,20 @@
                 @forelse($items as $item)
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-5 py-3.5 text-sm text-slate-400 font-mono-numbers">{{ $loop->iteration }}</td>
-                        <td class="px-5 py-3.5">
-                            <span class="text-sm font-semibold text-slate-800">{{ $item->name }}</span>
+                        <td class="px-5 py-3.5 flex items-center gap-3">
+                            @if($item->image)
+                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}"
+                                     class="w-10 h-10 object-cover rounded-lg border border-slate-200">
+                            @else
+                                <div class="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                            @endif
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold text-slate-800">{{ $item->name }}</span>
+                            </div>
                         </td>
                         <td class="px-5 py-3.5 text-sm text-slate-500">{{ $item->category->name ?? '-' }}</td>
                         <td class="px-5 py-3.5 text-center font-mono-numbers text-sm font-semibold text-slate-700">{{ $item->stock }}</td>

@@ -19,6 +19,8 @@
                     <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Qty</th>
                     <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Tgl Pinjam</th>
                     <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Tgl Kembali</th>
+                    <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Tgl Dikembalikan</th>
+                    <th class="px-5 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Denda</th>
                     <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
                 </tr>
             </thead>
@@ -44,13 +46,27 @@
                         <td class="px-5 py-3.5 text-center text-sm text-slate-600">
                             {{ \Carbon\Carbon::parse($record->return_date)->format('d M Y') }}
                         </td>
+                        <td class="px-5 py-3.5 text-center text-sm text-slate-600">
+                            @if($record->actual_return_date)
+                                {{ \Carbon\Carbon::parse($record->actual_return_date)->format('d M Y') }}
+                            @else
+                                <span class="text-slate-400">-</span>
+                            @endif
+                        </td>
+                        <td class="px-5 py-3.5 text-right font-semibold text-sm">
+                            @if($record->fine_amount > 0)
+                                <span class="text-red-600">Rp {{ number_format($record->fine_amount, 0, ',', '.') }}</span>
+                            @else
+                                <span class="text-slate-400">-</span>
+                            @endif
+                        </td>
                         <td class="px-5 py-3.5 text-center">
                             <span class="text-xs px-2.5 py-1 rounded-full font-medium {{ $cls }}">{{ $label }}</span>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-5 py-12 text-center text-sm text-slate-400">
+                        <td colspan="8" class="px-5 py-12 text-center text-sm text-slate-400">
                             <svg class="w-10 h-10 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>

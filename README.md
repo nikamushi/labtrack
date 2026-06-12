@@ -23,20 +23,22 @@ LabTrack adalah aplikasi web yang dirancang untuk mempermudah pengelolaan invent
 ## Fitur Utama
 
 ### 👤 Role Admin
-- **Dashboard** — Statistik real-time (total stok, tersedia, dipinjam, menunggu persetujuan), daftar barang terpopuler, dan aktivitas terbaru.
+- **Dashboard** — Statistik real-time (total stok, tersedia, dipinjam, menunggu persetujuan), daftar barang terpopuler, aktivitas terbaru, dan **Advanced Analytics** visualisasi grafik (Chart.js) tren peminjaman mingguan, distribusi kategori barang, serta kondisi barang.
 - **Manajemen Kategori** — CRUD kategori barang (Create, Read, Update, Delete).
-- **Manajemen Inventaris** — CRUD barang dengan pengelolaan kondisi (Baik, Rusak, Hilang, Perawatan) dan sinkronisasi status otomatis.
+- **Manajemen Inventaris** — CRUD barang dengan **Upload Gambar Barang**, pengelolaan kondisi (Baik, Rusak, Hilang, Perawatan) dan sinkronisasi status otomatis.
 - **Persetujuan Peminjaman** — Menyetujui atau menolak permintaan peminjaman dari mahasiswa.
-- **Konfirmasi Pengembalian** — Mengonfirmasi pengembalian barang dan memperbarui stok secara otomatis.
+- **Konfirmasi Pengembalian & Denda** — Mengonfirmasi pengembalian barang, mencatat tanggal kembali aktual, menghitung **Sistem Denda Keterlambatan** otomatis (Rp 5.000 / hari), dan memperbarui stok secara otomatis.
+- **Laporan Denda** — Menampilkan rekapitulasi data denda keterlambatan mahasiswa beserta total akumulasi denda.
 - **Manajemen Mahasiswa** — CRUD akun mahasiswa.
-- **Riwayat Transaksi** — Melihat seluruh log aktivitas peminjaman dan pengembalian.
+- **Riwayat Transaksi** — Melihat seluruh log aktivitas peminjaman dan pengembalian lengkap dengan tanggal aktual dikembalikan dan jumlah denda.
+- **Laporan Administratif (Export CSV)** — Mengunduh laporan instan dalam format CSV untuk Riwayat Transaksi, Inventaris Barang, dan Rekapitulasi Denda.
 
 ### 🎓 Role Mahasiswa
 - **Dashboard** — Ringkasan peminjaman aktif, permintaan tertunda, dan total riwayat.
-- **Katalog Barang** — Melihat daftar barang yang tersedia dengan fitur pencarian dan filter kategori.
+- **Katalog Barang** — Melihat daftar barang yang tersedia dengan visualisasi gambar barang, pencarian, dan filter kategori.
 - **Ajukan Peminjaman** — Mengajukan permintaan peminjaman dengan menentukan jumlah dan tanggal peminjaman/pengembalian.
 - **Ajukan Pengembalian** — Mengirim permintaan pengembalian barang yang sudah disetujui.
-- **Riwayat Pribadi** — Melihat seluruh riwayat peminjaman milik sendiri.
+- **Riwayat Pribadi** — Melihat seluruh riwayat peminjaman milik sendiri lengkap dengan informasi denda jika terlambat mengembalikan barang.
 
 ---
 
@@ -129,17 +131,20 @@ http://127.0.0.1:8000
 
 ## Menjalankan Pengujian Otomatis
 
-Proyek ini dilengkapi dengan 31 skenario pengujian otomatis menggunakan **Pest PHP** yang mencakup:
+Proyek ini dilengkapi dengan 39 skenario pengujian otomatis menggunakan **Pest PHP** yang mencakup:
 - Autentikasi & Autorisasi berbasis role
 - CRUD Kategori, Barang, dan Mahasiswa
 - Alur peminjaman & pengembalian secara end-to-end
 - Sinkronisasi stok barang
+- Pengunggahan gambar barang (`Item Image Upload`)
+- Sistem kalkulasi denda keterlambatan pengembalian
+- Ekspor laporan dalam format CSV
 
 ```bash
 php artisan test
 ```
 
-Hasil yang diharapkan: **31/31 tests PASSED**
+Hasil yang diharapkan: **39/39 tests PASSED**
 
 ---
 
@@ -154,6 +159,7 @@ labtrack/
 │   │   │   ├── BorrowingController.php
 │   │   │   ├── CategoryController.php
 │   │   │   ├── DashboardController.php
+│   │   │   ├── FineController.php
 │   │   │   ├── HistoryController.php
 │   │   │   ├── ItemController.php
 │   │   │   └── ReturnController.php

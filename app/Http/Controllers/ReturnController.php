@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Borrowing;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,7 +23,7 @@ class ReturnController extends Controller
     }
 
     /**
-     * Admin: confirm a return.
+     * Admin: confirm a return and calculate fine if overdue.
      */
     public function approve(Borrowing $borrowing)
     {
@@ -51,9 +52,24 @@ class ReturnController extends Controller
         }
 
         $item->update(['status' => $newStatus]);
-        $borrowing->update(['status' => 'returned']);
 
-        return back()->with('success', 'Pengembalian berhasil dikonfirmasi dan stok barang telah diperbarui.');
+        // Calculate fine if overdue
+        $today = Carbon::today();
+        $fineAmount = $borrowing->calculateFine($today);
+
+        $borrowing->update([
+            'status'             => 'returned',
+            'actual_return_date' => $today,
+            'fine_amount'        => $fineAmount,
+        ]);
+
+        $message = 'Pengembalian berhasil dikonfirmasi dan stok barang telah diperbarui.';
+        if ($fineAmount > 0) {
+            $days = $borrowing->overdueDays($today);
+            $message .= " Denda keterlambatan {$days} hari: Rp " . number_format($fineAmount, 0, ',', '.') . '.';
+        }
+
+        return back()->with('success', $message);
     }
 
     /**
